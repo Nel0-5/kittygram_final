@@ -42,3 +42,21 @@ jobs:
         python -m ruff check backend/
         cd backend/
         python manage.py test
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: npm
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install frontend dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Test frontend
+      env:
+        CI: true
+      run: |
+        cd frontend
+        npm test -- --watchAll=false
